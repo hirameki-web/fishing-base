@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FISHING BASE 伊豆 — 予約</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,380;0,600;1,500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A33;
+    --teal:#3E6259;
+    --teal-dark:#2C473F;
+    --rust:#C1622D;
+    --sand:#D8CBB3;
+    --paper:#F1EDE4;
+    --charcoal:#23211D;
+    --line: rgba(27,42,51,0.16);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--charcoal);
+    font-family:'IBM Plex Sans JP','Hiragino Sans',sans-serif;
+    line-height:1.7;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces','Hiragino Mincho ProN',serif;
+    color:var(--ink);
+    margin:0;
+    letter-spacing:0.01em;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:20;
+    background:rgba(241,237,228,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .headbar{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;}
+  .brand{display:flex;flex-direction:column;line-height:1.1;}
+  .brand .name{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--ink);}
+  .brand .place{font-size:12px;color:var(--teal-dark);margin-top:2px;}
+  nav{display:flex;gap:28px;font-size:14px;}
+  nav a{text-decoration:none;border-bottom:1px solid transparent;padding-bottom:3px;transition:border-color .2s;}
+  nav a:hover{border-color:var(--rust);}
+  .nav-cta{
+    background:var(--teal);color:#fff;padding:9px 18px;border-radius:2px;
+    font-size:14px;text-decoration:none;
+  }
+  @media(max-width:760px){nav .nav-link{display:none;} }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;
+    padding:76px 0 64px;align-items:center;
+  }
+  @media(max-width:860px){.hero{grid-template-columns:1fr;padding:44px 0;}}
+  .eyebrow{
+    font-size:13px;color:var(--teal-dark);margin-bottom:18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:6px;height:6px;background:var(--rust);border-radius:50%;display:inline-block;}
+  .hero h1{font-size:46px;font-weight:600;line-height:1.28;}
+  @media(max-width:640px){.hero h1{font-size:33px;}}
+  .hero p.lead{font-size:16px;color:#3c3a34;margin-top:22px;max-width:46ch;}
+  .hero-actions{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--ink);color:#fff;padding:14px 26px;text-decoration:none;
+    font-size:14.5px;border:none;cursor:pointer;border-radius:2px;
+  }
+  .btn-ghost{
+    background:transparent;color:var(--ink);padding:14px 22px;text-decoration:none;
+    font-size:14.5px;border:1px solid var(--ink);border-radius:2px;
+  }
+
+  /* Schematic diagram */
+  .schematic{
+    background:#fff;border:1px solid var(--line);padding:22px;
+  }
+  .schematic .cap{font-size:11.5px;color:var(--teal-dark);margin-bottom:12px;display:flex;justify-content:space-between;}
+  .schematic svg{width:100%;height:auto;display:block;}
+
+  /* ---------- Section shared ---------- */
+  section{padding:64px 0;border-top:1px solid var(--line);}
+  .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:38px;flex-wrap:wrap;}
+  .sec-head h2{font-size:28px;font-weight:600;}
+  .sec-head .note{font-size:13.5px;color:var(--teal-dark);max-width:34ch;}
+
+  /* ---------- Facility ledger ---------- */
+  .ledger{border-top:1px solid var(--ink);}
+  .ledger-row{
+    display:grid;grid-template-columns:28px 1fr 1.4fr;gap:20px;
+    padding:16px 0;border-bottom:1px solid var(--line);align-items:start;
+  }
+  .ledger-row .check{
+    width:18px;height:18px;border:1.4px solid var(--teal);margin-top:3px;
+    position:relative;flex-shrink:0;
+  }
+  .ledger-row .check::after{
+    content:"";position:absolute;left:3px;top:0px;width:5px;height:9px;
+    border-right:2px solid var(--rust);border-bottom:2px solid var(--rust);
+    transform:rotate(40deg);
+  }
+  .ledger-row .item{font-family:'Fraunces',serif;font-size:16.5px;color:var(--ink);}
+  .ledger-row .desc{font-size:14px;color:#4a473f;}
+  @media(max-width:640px){.ledger-row{grid-template-columns:22px 1fr;}
+    .ledger-row .desc{grid-column:2/3;}}
+
+  /* ---------- Plan slip ---------- */
+  .plan-slip{
+    background:var(--ink);color:var(--paper);
+    display:grid;grid-template-columns:1.2fr 1fr;
+  }
+  @media(max-width:760px){.plan-slip{grid-template-columns:1fr;}}
+  .plan-left{padding:44px;}
+  .plan-left .tag{font-size:12px;color:var(--sand);letter-spacing:0.03em;}
+  .plan-left h3{color:#fff;font-size:26px;margin-top:10px;}
+  .plan-left p{color:#cfd3ce;font-size:14.5px;margin-top:16px;max-width:44ch;}
+  .plan-right{
+    padding:44px;border-left:1px solid rgba(255,255,255,0.16);
+    background:rgba(255,255,255,0.04);
+  }
+  .price-row{display:flex;justify-content:space-between;font-size:14px;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,0.18);}
+  .price-row.total{border-bottom:none;padding-top:14px;font-size:17px;color:#fff;}
+  .price-row .amt{font-family:'Fraunces',serif;}
+
+  /* ---------- Booking ---------- */
+  .booking-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:0;border:1px solid var(--line);}
+  @media(max-width:900px){.booking-grid{grid-template-columns:1fr;}}
+  .cal-pane{padding:34px;border-right:1px solid var(--line);background:#fff;}
+  @media(max-width:900px){.cal-pane{border-right:none;border-bottom:1px solid var(--line);}}
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+  .cal-head button{background:none;border:1px solid var(--line);width:30px;height:30px;cursor:pointer;font-size:14px;}
+  .cal-month{font-family:'Fraunces',serif;font-size:17px;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .cal-dow{font-size:11px;text-align:center;color:#8a8676;padding-bottom:4px;}
+  .cal-day{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    font-size:13.5px;border:1px solid var(--line);cursor:pointer;background:#fff;
+    position:relative;color:var(--charcoal);
+  }
+  .cal-day.blank{border:none;cursor:default;}
+  .cal-day.disabled{color:#c9c5b8;background:#f6f4ee;cursor:not-allowed;text-decoration:line-through;}
+  .cal-day.in-range{background:var(--sand);}
+  .cal-day.selected{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .cal-legend{display:flex;gap:18px;margin-top:16px;font-size:12px;color:#4a473f;}
+  .cal-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{width:11px;height:11px;display:inline-block;border:1px solid var(--line);}
+  .swatch.disabled{background:#f6f4ee;}
+  .swatch.selected{background:var(--ink);}
+
+  .form-pane{padding:34px;background:var(--paper);}
+  .field{margin-bottom:20px;}
+  .field label{display:block;font-size:12.5px;color:var(--teal-dark);margin-bottom:7px;}
+  .stepper{display:flex;align-items:center;gap:14px;}
+  .stepper button{
+    width:32px;height:32px;border:1px solid var(--ink);background:#fff;cursor:pointer;font-size:16px;
+  }
+  .stepper .count{font-family:'Fraunces',serif;font-size:18px;min-width:20px;text-align:center;}
+  .summary-line{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 0;border-bottom:1px dashed var(--line);}
+  .summary-line.total{border-bottom:none;padding-top:12px;font-size:16px;color:var(--ink);}
+  .reserve-btn{
+    margin-top:22px;width:100%;padding:15px;background:var(--rust);color:#fff;border:none;
+    font-size:15px;cursor:pointer;border-radius:2px;
+  }
+  .reserve-btn:disabled{background:#cbb9a5;cursor:not-allowed;}
+  .confirm-box{
+    margin-top:16px;padding:14px 16px;background:#eef1ea;border:1px solid var(--line);
+    font-size:13.5px;color:var(--teal-dark);display:none;
+  }
+
+  footer{padding:40px 0;border-top:1px solid var(--line);}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;font-size:13px;color:#5a564c;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="headbar wrap" style="padding-left:0;padding-right:0;">
+    <div class="brand">
+      <span class="name">FISHING BASE</span>
+      <span class="place">伊豆 準備中 — 第1号店</span>
+    </div>
+    <nav>
+      <a class="nav-link" href="#facility">施設</a>
+      <a class="nav-link" href="#plan">料金</a>
+      <a class="nav-link" href="#access">アクセス</a>
+      <a class="nav-cta" href="#booking">予約する</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none;">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>海で遊ぶ人のための宿泊拠点</div>
+      <h1>釣って、帰って、<br>片付けて、また眠る。<br>そのための基地。</h1>
+      <p class="lead">
+        豪華な別荘ではなく、朝マズメ前に仮眠し、帰宅後に道具を洗って乾かし、魚を捌いて保管できる一棟貸しの拠点です。釣り人はもちろん、サーフィンやSUP、家族での海遊びにも使える設計にしています。
+      </p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#booking">空き状況を見る</a>
+        <a class="btn-ghost" href="#facility">設備を見る</a>
+      </div>
+    </div>
+    <div class="schematic">
+      <div class="cap"><span>平屋 簡易図面</span><span>定員 2〜4名</span></div>
+      <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="300" height="240" fill="none" stroke="#1B2A33" stroke-width="2"/>
+        <line x1="10" y1="150" x2="180" y2="150" stroke="#1B2A33" stroke-width="1.4"/>
+        <line x1="180" y1="10" x2="180" y2="250" stroke="#1B2A33" stroke-width="1.4"/>
+        <line x1="180" y1="150" x2="310" y2="150" stroke="#1B2A33" stroke-width="1.4"/>
+        <line x1="245" y1="150" x2="245" y2="250" stroke="#1B2A33" stroke-width="1.4"/>
+        <text x="26" y="90" font-family="IBM Plex Sans JP" font-size="12" fill="#2C473F">寝室 (2〜4名)</text>
+        <text x="26" y="200" font-family="IBM Plex Sans JP" font-size="12" fill="#2C473F">洗い場 / 乾燥室</text>
+        <text x="196" y="90" font-family="IBM Plex Sans JP" font-size="12" fill="#2C473F">キッチン / 捌き台</text>
+        <text x="196" y="200" font-family="IBM Plex Sans JP" font-size="11" fill="#2C473F">シャワー</text>
+        <text x="261" y="200" font-family="IBM Plex Sans JP" font-size="11" fill="#2C473F">冷凍</text>
+        <text x="150" y="264" font-family="IBM Plex Sans JP" font-size="10" fill="#8a8676">徒歩5分圏内に海</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- FACILITY -->
+  <section id="facility">
+    <div class="sec-head">
+      <h2>釣り人が困ることを、先につぶしておく</h2>
+      <p class="note">高級さより「帰ってきてからが楽」であることを優先しています。</p>
+    </div>
+    <div class="ledger">
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">釣具 洗い場</span>
+        <span class="desc">竿・リール・ウェアをまとめて洗える屋外シンク。塩抜きしてから室内に持ち込めます。</span>
+      </div>
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">乾燥室</span>
+        <span class="desc">濡れたウェア・タオル・ロッドを一晩で乾かせるスペース。翌朝そのまま出船できます。</span>
+      </div>
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">捌き台 / 調理台</span>
+        <span class="desc">釣った魚をその場で捌ける台とシンクを分離配置。臭いや汁を居室に持ち込みません。</span>
+      </div>
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">冷凍庫 / 保冷</span>
+        <span class="desc">クーラーボックス代わりに使える大型冷凍庫。持ち帰り用の保冷剤も常備。</span>
+      </div>
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">タックル収納</span>
+        <span class="desc">ロッドケース・ジグ・ルアーボックスを立てて置ける収納棚。</span>
+      </div>
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">駐車場 2台分</span>
+        <span class="desc">車中泊装備や自転車を積んだままでも駐車できるスペースを確保。</span>
+      </div>
+      <div class="ledger-row">
+        <span class="check"></span>
+        <span class="item">海まで徒歩5分</span>
+        <span class="desc">早朝出船・堤防釣りに徒歩でアクセスできる距離を条件に物件を検討中。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section id="plan">
+    <div class="sec-head">
+      <h2>料金プラン(仮)</h2>
+      <p class="note">まずは一棟貸しの素泊まりプランのみ。反応を見ながら朝食や送迎などを追加検討します。</p>
+    </div>
+    <div class="plan-slip">
+      <div class="plan-left">
+        <div class="tag">PLAN 01</div>
+        <h3>一棟貸し・素泊まり</h3>
+        <p>平屋を一棟まるごと貸し切り。チェックイン15:00 / チェックアウト10:00。釣具の洗浄・乾燥・保管設備はすべて無料で利用できます。</p>
+        <p>基本2名〜、最大4名まで宿泊可能。</p>
+      </div>
+      <div class="plan-right">
+        <div class="price-row"><span>基本料金(2名まで)</span><span class="amt">¥18,000 / 泊</span></div>
+        <div class="price-row"><span>追加1名につき</span><span class="amt">+ ¥3,000</span></div>
+        <div class="price-row"><span>清掃料</span><span class="amt">¥3,000 / 回</span></div>
+        <div class="price-row total"><span>4名・1泊の目安</span><span class="amt">¥27,000</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING -->
+  <section id="booking">
+    <div class="sec-head">
+      <h2>空き状況・仮予約</h2>
+      <p class="note">日付を2つ選ぶとチェックイン/チェックアウトになります。※開業準備中のため実際の予約は確定しません。</p>
+    </div>
+    <div class="booking-grid">
+      <div class="cal-pane">
+        <div class="cal-head">
+          <button id="prevMonth">‹</button>
+          <span class="cal-month" id="calMonthLabel"></span>
+          <button id="nextMonth">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <span><span class="swatch disabled"></span>予約済み</span>
+          <span><span class="swatch selected"></span>選択中</span>
+        </div>
+      </div>
+      <div class="form-pane">
+        <div class="field">
+          <label>チェックイン</label>
+          <div id="ciLabel" style="font-family:'Fraunces',serif;font-size:16px;">日付をカレンダーから選択</div>
+        </div>
+        <div class="field">
+          <label>チェックアウト</label>
+          <div id="coLabel" style="font-family:'Fraunces',serif;font-size:16px;">—</div>
+        </div>
+        <div class="field">
+          <label>人数</label>
+          <div class="stepper">
+            <button id="guestMinus">−</button>
+            <span class="count" id="guestCount">2</span>
+            <button id="guestPlus">+</button>
+          </div>
+        </div>
+        <div class="summary-line"><span id="nightsLabel">0泊</span><span id="baseAmt">¥0</span></div>
+        <div class="summary-line"><span>清掃料</span><span>¥3,000</span></div>
+        <div class="summary-line total"><span>合計目安</span><span id="totalAmt">¥0</span></div>
+        <button class="reserve-btn" id="reserveBtn" disabled>日付を選択してください</button>
+        <div class="confirm-box" id="confirmBox">仮予約を受け付けました。準備が整い次第、確定のご連絡をいたします。</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap foot-grid">
+    <span>FISHING BASE — KINKIN Fishing 運営 / 伊豆エリア準備中</span>
+    <span id="access">アクセス・詳細はお問い合わせください</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth();
+
+  // mock: some already-booked dates this month/next month (day-of-month numbers)
+  const disabledByMonth = {};
+  function monthKey(y,m){return y+'-'+m;}
+  disabledByMonth[monthKey(viewYear, viewMonth)] = [8,9,10,22];
+  disabledByMonth[monthKey(viewYear, viewMonth+1)] = [3,4,15,16,17];
+
+  let checkin = null;
+  let checkout = null;
+  let guests = 2;
+
+  const calGrid = document.getElementById('calGrid');
+  const calMonthLabel = document.getElementById('calMonthLabel');
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const dowNames = ['日','月','火','水','木','金','土'];
+
+  function dateVal(y,m,d){ return y*10000 + (m+1)*100 + d; }
+
+  function render(){
+    calGrid.innerHTML = '';
+    calMonthLabel.textContent = viewYear + '年 ' + monthNames[viewMonth];
+    dowNames.forEach(function(d){
+      const el = document.createElement('div');
+      el.className = 'cal-dow';
+      el.textContent = d;
+      calGrid.appendChild(el);
+    });
+    const firstDow = new Date(viewYear, viewMonth, 1).getDay();
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    const disabled = disabledByMonth[monthKey(viewYear, viewMonth)] || [];
+
+    for(let i=0;i<firstDow;i++){
+      const blank = document.createElement('div');
+      blank.className = 'cal-day blank';
+      calGrid.appendChild(blank);
+    }
+    for(let d=1; d<=daysInMonth; d++){
+      const cell = document.createElement('div');
+      cell.className = 'cal-day';
+      cell.textContent = d;
+      const val = dateVal(viewYear, viewMonth, d);
+      const isPast = new Date(viewYear, viewMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+      if(disabled.indexOf(d) !== -1 || isPast){
+        cell.classList.add('disabled');
+      } else {
+        cell.addEventListener('click', function(){ onPick(val); });
+      }
+      if(checkin && val === checkin) cell.classList.add('selected');
+      if(checkout && val === checkout) cell.classList.add('selected');
+      if(checkin && checkout && val > checkin && val < checkout) cell.classList.add('in-range');
+
+      calGrid.appendChild(cell);
+    }
+  }
+
+  function onPick(val){
+    if(!checkin || (checkin && checkout)){
+      checkin = val; checkout = null;
+    } else if(val > checkin){
+      checkout = val;
+    } else {
+      checkin = val; checkout = null;
+    }
+    updateSummary();
+    render();
+  }
+
+  function fmt(val){
+    if(!val) return '—';
+    const y = Math.floor(val/10000);
+    const m = Math.floor((val%10000)/100);
+    const d = val%100;
+    return y+'/'+m+'/'+d;
+  }
+
+  function nightsBetween(){
+    if(!checkin || !checkout) return 0;
+    const y1=Math.floor(checkin/10000), m1=Math.floor((checkin%10000)/100)-1, d1=checkin%100;
+    const y2=Math.floor(checkout/10000), m2=Math.floor((checkout%10000)/100)-1, d2=checkout%100;
+    const diff = (new Date(y2,m2,d2) - new Date(y1,m1,d1)) / 86400000;
+    return Math.round(diff);
+  }
+
+  function updateSummary(){
+    document.getElementById('ciLabel').textContent = checkin ? fmt(checkin) : '日付をカレンダーから選択';
+    document.getElementById('coLabel').textContent = checkout ? fmt(checkout) : '—';
+    const nights = nightsBetween();
+    document.getElementById('nightsLabel').textContent = nights + '泊 (' + guests + '名)';
+
+    const base = 18000 + Math.max(0, guests-2) * 3000;
+    const baseTotal = base * Math.max(nights,0);
+    document.getElementById('baseAmt').textContent = '¥' + baseTotal.toLocaleString();
+    const total = baseTotal + (nights>0 ? 3000 : 0);
+    document.getElementById('totalAmt').textContent = '¥' + total.toLocaleString();
+
+    const btn = document.getElementById('reserveBtn');
+    if(nights > 0){
+      btn.disabled = false;
+      btn.textContent = '仮予約に進む';
+    } else {
+      btn.disabled = true;
+      btn.textContent = '日付を選択してください';
+    }
+  }
+
+  document.getElementById('guestMinus').addEventListener('click', function(){
+    guests = Math.max(2, guests-1);
+    document.getElementById('guestCount').textContent = guests;
+    updateSummary();
+  });
+  document.getElementById('guestPlus').addEventListener('click', function(){
+    guests = Math.min(4, guests+1);
+    document.getElementById('guestCount').textContent = guests;
+    updateSummary();
+  });
+  document.getElementById('prevMonth').addEventListener('click', function(){
+    viewMonth--; if(viewMonth<0){viewMonth=11; viewYear--;}
+    render();
+  });
+  document.getElementById('nextMonth').addEventListener('click', function(){
+    viewMonth++; if(viewMonth>11){viewMonth=0; viewYear++;}
+    render();
+  });
+  document.getElementById('reserveBtn').addEventListener('click', function(){
+    document.getElementById('confirmBox').style.display = 'block';
+  });
+
+  render();
+  updateSummary();
+})();
+</script>
+
+</body>
+</html>
